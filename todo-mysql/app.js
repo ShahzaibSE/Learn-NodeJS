@@ -4,23 +4,28 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var mysql = require('mysql');
-var sequelize = require('./mysql.config').sequalize;
 
-// Routes
 var index = require('./routes/index');
 var users = require('./routes/users');
-var contacts = require('./routes/contacts');
+var todos = require('./routes/todos');
+
+// db
+const mysql_access = require('./db.config').sequelize_mysql();
+// console.log('MySQL Access');
+// console.log(mysql_access);
 
 var app = express();
 
-//Testing the connection.
-// sequelize.authenticate().then(() => {
-//   console.log('Connection has been established successfully.');
-// })
-// .catch(err => {
-//   console.error('Unable to connect to the database:', err);
-// });
+// Testing mysql connection.
+mysql_access
+.authenticate()
+.then(() => {
+  console.log('Connection has been established successfully.');
+})
+.catch(err => {
+  console.error('Unable to connect to the database:', err);
+});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,7 +41,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
-app.use('/contacts',contacts);
+app.use('/todos', todos);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

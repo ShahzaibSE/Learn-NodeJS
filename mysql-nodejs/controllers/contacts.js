@@ -1,7 +1,7 @@
 'use strict'
 
 const mysql = require('mysql');
-const mysql_connection = require('./../database.config').config.connection;
+const mysql_connection = require('./../mysql.config').config.connection;
 
 exports.add = function(req,res) {
     // Opening my sql connection.
@@ -73,6 +73,6 @@ exports.addV2 = function(req,res) {
         mysql_connection.end();
 }
 
-exports.select = function(req,res) {
+exports.selectall = function(req,res) {
     
 }
