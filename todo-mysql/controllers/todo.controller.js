@@ -13,29 +13,51 @@ const ToDoModel = require('./../models/todo')(Sequelize, sequelize);  // ToDo Mo
 
 exports.create = function(req,res) {
     console.log('Model');
-    console.log(model);
+    console.log(ToDoModel);
     let body = req.body; // params by user.
     let inputObj = {
         name : body.name,
-        createdAt: new Date().getDate()
+        status: body.status
     };
-    model.create(inputObj).then( ()=>{
+    // Non-Persistant Instances.
+    let newRecord = ToDoModel.build(inputObj);
+    newRecord.save().then( () => {
         res.send({
-            status: true,
+            status : true,
             resCode : 200,
             isError : false,
-            message: "Data saved successfully"
+            message : "Data saved successfully"
         });
-    } ).catch((error)=>{
-        console.log('Internal server error');
-        console.log(error);
+    });
+    newRecord.save().catch( (err) => {
+        console.log('Error');
+        console.log(err);
         res.send({
             status : false,
             resCode : 500,
             isError : true,
-            message : "Internal server error while saving data."
+            message : "Invalid parameters supplied",
+            error : err
         });
-    })
+    });
+    // Persistant Instances.
+    // ToDoModel.create(inputObj).then( ()=>{
+    //     res.send({
+    //         status: true,
+    //         resCode : 200,
+    //         isError : false,
+    //         message: "Data saved successfully"
+    //     });
+    // } ).catch((error)=>{
+    //     console.log('Internal server error');
+    //     console.log(error);
+    //     res.send({
+    //         status : false,
+    //         resCode : 500,
+    //         isError : true,
+    //         message : "Internal server error while saving data."
+    //     });
+    // })
 }
 
 exports.update = function(req,res) {
